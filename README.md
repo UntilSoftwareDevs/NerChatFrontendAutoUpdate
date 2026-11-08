@@ -54,3 +54,10 @@ npx edgeone makers deploy ./dist --name nerchat --env preview --site china --ski
 本地产物位于 `dist/`，下载缓存及部署日志位于 `.work/`，均不提交。`scripts/verify.py <部署URL>` 可验收实际 HTTP 缓存、安全头、JSON、CORS、307 和查询参数。首次创建项目需先完成一次生产部署，腾讯云才允许预览部署。回滚可在腾讯云控制台选择历史生产部署；回滚后检查是否需要暂时停用自动更新。
 
 参考：[Element 安装](https://web-docs.element.dev/install.html)、[腾讯云 CLI](https://edgeone.cloud.tencent.com/pages/document/162936923278893056)、[edgeone.json](https://pages.edgeone.ai/document/edgeone-json)、[腾讯云缓存机制](https://edgeone.ai/document/180002216676458496)。
+
+## MatrixRTC
+
+`overlay/.well-known/matrix/client` advertises the NerChat LiveKit authorization
+service. The bundled Element Call handles room calls; legacy 1:1 calling remains
+available (`use_exclusively: false`). No anonymous guest SPA link is advertised.
+`meet.neboer.site` is a separate frontend, not a Jitsi server.

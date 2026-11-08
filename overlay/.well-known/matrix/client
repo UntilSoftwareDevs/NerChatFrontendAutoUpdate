@@ -1,1 +1,11 @@
-{"m.homeserver": {"base_url":"https://matrix.neboer.site:8448"},"im.vector.riot.jitsi":{"preferredDomain":"meet.neboer.site"}}
+{
+  "m.homeserver": {
+    "base_url": "https://matrix.neboer.site:8448"
+  },
+  "org.matrix.msc4143.rtc_foci": [
+    {
+      "type": "livekit",
+      "livekit_service_url": "https://rtc.neboer.site:8448/livekit/jwt"
+    }
+  ]
+}
