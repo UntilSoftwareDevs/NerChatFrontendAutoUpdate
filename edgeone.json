@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/widgets/element-call/config.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/*",
       "headers": [
         {
@@ -203,6 +212,10 @@
     }
   ],
   "caches": [
+    {
+      "source": "/widgets/element-call/config.json",
+      "cacheTtl": 0
+    },
     {
       "source": "/",
       "cacheTtl": 0

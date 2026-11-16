@@ -61,3 +61,11 @@ npx edgeone makers deploy ./dist --name nerchat --env preview --site china --ski
 service. The bundled Element Call handles room calls; legacy 1:1 calling remains
 available (`use_exclusively: false`). No anonymous guest SPA link is advertised.
 `meet.neboer.site` is a separate frontend, not a Jitsi server.
+
+The build supplies `widgets/element-call/config.json` containing `{}` only when
+the embedded widget exists and its config is absent, preserving upstream or
+overlay configs. This avoids HTML SPA fallbacks breaking initialization after
+[the upstream config removal](https://github.com/element-hq/element-call/pull/4317).
+The config uses revalidation and zero edge cache TTL; artifact and HTTP checks
+require a JSON object. Reassess this compatibility fallback once the bundled
+release includes [the upstream fix](https://github.com/element-hq/element-call/pull/4440).

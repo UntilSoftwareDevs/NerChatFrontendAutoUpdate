@@ -56,6 +56,13 @@ with tarfile.open(archive) as tar:
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(tar.extractfile(member).read())
 shutil.copytree(ROOT / 'overlay', DIST, dirs_exist_ok=True)
+# Embedded Element Call no longer ships a config after removing its last
+# obsolete option (element-call#4317). Until the HTML-response fallback in
+# element-call#4440 ships, SPA fallback pages break its JSON initialization.
+# An empty object selects upstream defaults; preserve any supplied config.
+call_config = DIST / 'widgets/element-call/config.json'
+if (call_config.parent / 'index.html').is_file() and not call_config.exists():
+    call_config.write_text('{}\n', encoding='utf-8')
 shutil.copyfile(ROOT / 'edgeone.json', DIST / 'edgeone.json')
 shutil.copytree(ROOT / 'edge-functions', DIST / 'edge-functions', dirs_exist_ok=True)
 snapshot = DIST / '_matrix/client/versions'

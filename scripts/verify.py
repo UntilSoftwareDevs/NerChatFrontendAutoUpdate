@@ -12,6 +12,7 @@ release = json.loads((dist / 'nerchat-release.json').read_text())
 assert (dist / 'index.html').is_file()
 assert (dist / 'version').read_text().strip() == release['tag'].removeprefix('v') or (dist / 'version').read_text().strip() == release['tag']
 assert json.loads((dist / 'config.json').read_text())['brand'] == 'NerChat!'
+assert isinstance(json.loads((dist / 'widgets/element-call/config.json').read_text()), dict)
 for name in ['client', 'server']:
     json.loads((dist / '.well-known/matrix' / name).read_text())
 assert json.loads((dist / '_matrix/client/versions').read_text())['versions']
@@ -36,7 +37,7 @@ if len(sys.argv) > 1:
         except urllib.error.HTTPError as response:
             return response
     translation = next((dist / 'i18n').rglob('*.json'))
-    for path in ['/', '/index.html', '/config.json', '/version', '/' + translation.relative_to(dist).as_posix(), '/.well-known/matrix/client', '/.well-known/matrix/server', '/_matrix/client/versions', '/nerchat-release.json']:
+    for path in ['/', '/index.html', '/config.json', '/widgets/element-call/config.json', '/version', '/' + translation.relative_to(dist).as_posix(), '/.well-known/matrix/client', '/.well-known/matrix/server', '/_matrix/client/versions', '/nerchat-release.json']:
         response = fetch(path)
         assert response.status == 200, (path, response.status)
         assert 'no-cache' in response.headers.get('Cache-Control', '') or 'no-store' in response.headers.get('Cache-Control', ''), (path, dict(response.headers))
@@ -47,6 +48,9 @@ if len(sys.argv) > 1:
             assert response.headers.get('Access-Control-Allow-Origin') == '*'
             assert response.headers.get_content_type() == 'application/json'
             json.loads(response.read())
+        elif path == '/widgets/element-call/config.json':
+            assert response.headers.get_content_type() == 'application/json'
+            assert isinstance(json.loads(response.read()), dict)
         elif path == '/nerchat-release.json':
             assert json.loads(response.read()) == release
         print('HTTP OK', path)
