@@ -69,3 +69,7 @@ overlay configs. This avoids HTML SPA fallbacks breaking initialization after
 The config uses revalidation and zero edge cache TTL; artifact and HTTP checks
 require a JSON object. Reassess this compatibility fallback once the bundled
 release includes [the upstream fix](https://github.com/element-hq/element-call/pull/4440).
+
+## 大陆注册验证码 CSP
+
+构建时精确修补上游 `index.html` 的 meta CSP，仅在 `script-src` 中增加 `https://www.gstatic.cn/recaptcha/`，允许 Google 为大陆访问加载的验证码脚本。保留其他安全限制；不使用通配域名或 `unsafe-inline`。上游 CSP 结构变化时构建失败，要求人工检查。产物、预览及生产 HTTP 验收均检查该许可，避免自动更新覆盖补丁。

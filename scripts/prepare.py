@@ -7,6 +7,7 @@ import re
 import shutil
 import tarfile
 import urllib.request
+from captcha_csp import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / '.work'
@@ -56,6 +57,8 @@ with tarfile.open(archive) as tar:
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(tar.extractfile(member).read())
 shutil.copytree(ROOT / 'overlay', DIST, dirs_exist_ok=True)
+index = DIST / 'index.html'
+index.write_text(patch(index.read_text(encoding='utf-8')), encoding='utf-8')
 # Embedded Element Call no longer ships a config after removing its last
 # obsolete option (element-call#4317). Until the HTML-response fallback in
 # element-call#4440 ships, SPA fallback pages break its JSON initialization.

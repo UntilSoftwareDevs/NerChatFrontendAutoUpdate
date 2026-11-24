@@ -1,5 +1,6 @@
 """Verify the artifact, and optionally its deployed HTTP behavior."""
 import json
+from captcha_csp import verify as verify_captcha_csp
 from pathlib import Path
 import sys
 import urllib.request
@@ -10,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 dist = ROOT / 'dist'
 release = json.loads((dist / 'nerchat-release.json').read_text())
 assert (dist / 'index.html').is_file()
+verify_captcha_csp((dist / 'index.html').read_text(encoding='utf-8'))
 assert (dist / 'version').read_text().strip() == release['tag'].removeprefix('v') or (dist / 'version').read_text().strip() == release['tag']
 assert json.loads((dist / 'config.json').read_text())['brand'] == 'NerChat!'
 assert isinstance(json.loads((dist / 'widgets/element-call/config.json').read_text()), dict)
@@ -42,6 +44,7 @@ if len(sys.argv) > 1:
         assert response.status == 200, (path, response.status)
         assert 'no-cache' in response.headers.get('Cache-Control', '') or 'no-store' in response.headers.get('Cache-Control', ''), (path, dict(response.headers))
         if path in ['/', '/index.html']:
+            verify_captcha_csp(response.read().decode('utf-8'))
             assert response.headers.get('X-Frame-Options') == 'SAMEORIGIN'
             assert "frame-ancestors 'self'" in response.headers.get('Content-Security-Policy', '')
         if path.startswith('/.well-known/') or path == '/_matrix/client/versions':
